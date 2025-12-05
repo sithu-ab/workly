@@ -1,7 +1,27 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.flywaydb:flyway-mysql:11.18.0' // this is required by flyway plugin
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '4.0.0'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.flywaydb.flyway' version '11.18.0' // To run migration from command line like ./gradlew flywayMigrate
+}
+
+// Load environment variables from .env file
+if (file('.env').exists()) {
+    file('.env').eachLine { line ->
+        if (!line.startsWith('#') && line.contains('=')) {
+            def split = line.split('=', 2)
+            ext[split[0].trim()] = split[1].trim()
+        }
+    }
 }
 
 group = 'app.demo'
@@ -26,6 +46,10 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
@@ -35,4 +59,13 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// This flyway config is required by flyway plugin
+flyway {
+    url = project.findProperty('DB_URL') ?: 'jdbc:mysql://localhost:3306/workly_db'
+    user = project.findProperty('DB_USER') ?: 'root'
+    password = project.findProperty('DB_PASS') ?: ''
+    locations = ['filesystem:src/main/resources/db/migration']
+    cleanDisabled = false  // default true: This is a safety feature to prevent accidental database wiping
 }
