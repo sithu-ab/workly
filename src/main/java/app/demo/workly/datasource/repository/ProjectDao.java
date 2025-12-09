@@ -18,16 +18,19 @@ import java.util.Optional;
 public class ProjectDao implements ProjectRepo {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
+    /**
+     * Constructor.
+     */
+    public ProjectDao(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     private static final RowMapper<Optional<Project>> ROW_MAPPER = (rs, rowNum) -> extractRow(rs);
 
     private static final ResultSetExtractor<Optional<Project>> RESULT_EXTRACTOR= (rs) -> {
         if (!rs.next()) return Optional.empty();
         return extractRow(rs);
     };
-
-    public ProjectDao(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     private static Optional<Project> extractRow(ResultSet rs) throws SQLException {
         return Optional.of(Project.builder()
