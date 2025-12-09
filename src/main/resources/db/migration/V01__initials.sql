@@ -1,5 +1,6 @@
+-- Create projects table
 CREATE TABLE IF NOT EXISTS projects (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -7,12 +8,15 @@ CREATE TABLE IF NOT EXISTS projects (
     deleted_at TIMESTAMP
 );
 
+INSERT INTO projects (name) VALUES ('Default Project');
+
+-- Create tasks table
 CREATE TABLE IF NOT EXISTS tasks (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    project_id INT UNSIGNED NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     status VARCHAR(50) DEFAULT 'TODO',
-    project_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,

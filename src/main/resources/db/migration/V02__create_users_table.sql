@@ -1,5 +1,6 @@
+-- Create Users table
 CREATE TABLE users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -8,7 +9,7 @@ CREATE TABLE users (
     deleted_at TIMESTAMP
 );
 
-ALTER TABLE tasks ADD COLUMN user_id BIGINT UNSIGNED AFTER id;
+ALTER TABLE tasks ADD COLUMN user_id INT UNSIGNED AFTER project_id;
 ALTER TABLE tasks ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL;
 CREATE INDEX idx_tasks_user_id ON tasks(user_id);
 
