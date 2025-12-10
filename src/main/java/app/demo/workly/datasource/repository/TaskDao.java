@@ -50,8 +50,8 @@ public class TaskDao implements TaskRepo {
         final String sql = "SELECT id, project_id, title, description, status FROM tasks WHERE deleted_at IS NULL";
         return this.jdbcTemplate.query(sql, ROW_MAPPER)
                 .stream()
-                .filter(Optional::isPresent).
-                map(Optional::get)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .toList();
     }
 
@@ -87,7 +87,7 @@ public class TaskDao implements TaskRepo {
                 .addValue("projectId", projectId)
                 .addValue("title", title)
                 .addValue("description", description)
-                .addValue("status", status)
+                .addValue("status", status != null ? status.toUpperCase() : null)
                 .addValue("now", new Timestamp(System.currentTimeMillis()));
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

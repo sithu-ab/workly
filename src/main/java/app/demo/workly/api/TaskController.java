@@ -5,11 +5,13 @@ import app.demo.workly.api.request.UpdateTaskRequest;
 import app.demo.workly.api.response.GetTaskResponse;
 import app.demo.workly.domain.model.task.Task;
 import app.demo.workly.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -58,7 +60,7 @@ public class TaskController {
      * @return a ResponseEntity containing the details of the created task
      */
     @PostMapping("/projects/{projectId}/tasks")
-    public ResponseEntity<GetTaskResponse> createTask(@PathVariable int projectId, @RequestBody CreateTaskRequest request) {
+    public ResponseEntity<GetTaskResponse> createTask(@PathVariable int projectId, @Valid @RequestBody CreateTaskRequest request) {
         log.info("createTask projectId={} title={}", projectId, request.getTitle());
 
         Task created = taskService.create(
